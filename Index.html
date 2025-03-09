@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Portfolio | Scrollable Thumbnails</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: left;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            color: #2d2d2d;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .portfolio-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Main video player */
+        .main-video-section {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .main-player-container {
+            position: relative;
+            background-color: #000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0 auto;
+            height: 400px; /* Fixed height for both landscape and portrait */
+        }
+
+        .main-player-container.landscape {
+            width: calc(400px * (16 / 9)); /* Width for 16:9 aspect ratio */
+            max-width: 800px; /* Optional: Limit maximum width */
+        }
+
+        .main-player-container.portrait {
+            width: calc(400px * (9 / 16)); /* Width for 9:16 aspect ratio */
+            max-width: 350px; /* Optional: Limit maximum width */
+        }
+
+        .main-player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Loading overlay for main video player */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0, 0, 0); /* Semi-transparent black */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1rem;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Ensure clicks pass through to the player */
+            z-index: 10; /* Ensure it's above the iframe */
+        }
+
+        .loading-overlay.active {
+            opacity: 1; /* Show overlay when active */
+        }
+
+        .video-info {
+            margin-top: 10px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .video-description {
+            color: #666;
+            line-height: 1.5;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        /* Horizontally scrollable thumbnails section */
+        .thumbnails-section {
+            width: 100%;
+            position: relative;
+        }
+
+        .thumbnails-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #ccc #f1f1f1; /* Firefox */
+        }
+
+        /* Custom scrollbar styling for Chrome, Edge, and Safari */
+        .thumbnails-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .thumbnails-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .thumbnails-scroll-container::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .thumbnails-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        .thumbnails-grid {
+            display: inline-flex;
+            padding: 0 5px;
+        }
+
+        .thumbnail-item {
+            cursor: pointer;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 15px;
+            white-space: normal;
+            width: 180px; /* Smaller thumbnails */
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 20px;
+        }
+
+        .thumbnail-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .thumbnail-item.active {
+            outline: 3px solid #4285f4;
+        }
+
+        /* Scroll buttons */
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .scroll-left {
+            left: 5px;
+        }
+
+        .scroll-right {
+            right: 5px;
+        }
+
+        .scroll-button:before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        .scroll-left:before {
+            border-right: 12px solid #333;
+        }
+
+        .scroll-right:before {
+            border-left: 12px solid #333;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Initial state - player hidden until a video is selected */
+        .no-video-selected {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1f1f1f;
+            color: #999;
+            border-radius: 12px;
+            padding: 60px 40px; /* Smaller placeholder */
+            text-align: center;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Video Portfolio</h1>
+        <p class="subtitle">Select a thumbnail to play the video</p>
+    </header>
+
+    <div class="portfolio-container">
+        <!-- Main Video Player Section -->
+        <section class="main-video-section">
+            <div id="no-video-message" class="no-video-selected">
+                <div>
+                    <h2>No Video Selected</h2>
+                    <p>Click on a thumbnail below to load and play a video</p>
+                </div>
+            </div>
+
+            <div id="main-player-container" class="main-player-container landscape hidden">
+                <iframe id="main-player" src="" allowfullscreen></iframe>
+                <!-- Loading Overlay for Main Video Player -->
+                <div id="main-player-loading-overlay" class="loading-overlay">
+                    <span>Loading...</span>
+                </div>
+            </div>
+
+            <div class="video-info">
+                <h2 id="current-video-title" class="video-title hidden">Video Title</h2>
+                <p id="current-video-description" class="video-description hidden">Video description goes here.</p>
+            </div>
+        </section>
+
+        <!-- Horizontally Scrollable Thumbnails Section -->
+        <section class="thumbnails-section">
+            <button id="scroll-left" class="scroll-button scroll-left hidden"></button>
+            <div class="thumbnails-scroll-container" id="thumbnails-scroll-container">
+                <div class="thumbnails-grid" id="thumbnails-grid">
+                    <!-- Thumbnails will be added here dynamically -->
+                </div>
+            </div>
+            <button id="scroll-right" class="scroll-button scroll-right hidden"></button>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 My Portfolio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // ========================================
+        // ADD YOUR VIDEOS HERE
+        // ========================================
+        const portfolioVideos = [
+            {
+                id: "video1",
+                title: "Project Showcase 1",
+                description: "A brief showcase of my first major video project.",
+                url: "https://drive.google.com/file/d/1T9usTtwEDPPZKDmCuK-0JRgjcQD5Lo-X/view?usp=drive_link",
+                orientation: "landscape"
+            },
+            {
+                id: "video2",
+                title: "Mobile App Demo",
+                description: "Walkthrough of a mobile application I designed.",
+                url: "https://drive.google.com/file/d/1m0EIQFwSVT6uHb8G1h0guKLxDBzFUAbt/view?usp=drive_link",
+                orientation: "portrait"
+            },
+            // Add more videos here...
+        ];
+
+        // Function to convert regular Google Drive share URL to embed URL
+        function getEmbedUrl(url) {
+            let fileId;
+
+            if (url.includes('/file/d/')) {
+                const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    fileId = fileIdMatch[1];
+                }
+            } else if (url.includes('?id=')) {
+                const fileIdMatch = url.match(/\?id=([^&]+)/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    fileId = fileIdMatch[1];
+                }
+            }
+
+            if (!fileId) {
+                console.error("Invalid Google Drive URL format:", url);
+                return url; // Return the original URL if can't parse
+            }
+
+            return `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+
+        // Function to create thumbnails
+        function createThumbnails() {
+            const thumbnailsGrid = document.getElementById('thumbnails-grid');
+
+            portfolioVideos.forEach((video, index) => {
+                const thumbnailItem = document.createElement('div');
+                thumbnailItem.className = 'thumbnail-item';
+                thumbnailItem.dataset.videoId = video.id;
+                thumbnailItem.textContent = video.title; // Add video title as text
+
+                // Add click event to play the video
+                thumbnailItem.addEventListener('click', () => {
+                    playVideo(video);
+
+                    // Mark this thumbnail as active
+                    document.querySelectorAll('.thumbnail-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    thumbnailItem.classList.add('active');
+
+                    // Scroll the selected thumbnail into view
+                    thumbnailItem.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                });
+
+                thumbnailsGrid.appendChild(thumbnailItem);
+
+                // Auto-play the first video when page loads
+                if (index === 0) {
+                    setTimeout(() => {
+                        thumbnailItem.click();
+                    }, 500);
+                }
+            });
+
+            // Setup scroll buttons if we have enough videos to scroll
+            setupScrollButtons();
+        }
+
+        // Function to play a video in the main player
+        function playVideo(video) {
+            const mainPlayerContainer = document.getElementById('main-player-container');
+            const mainPlayer = document.getElementById('main-player');
+            const videoTitle = document.getElementById('current-video-title');
+            const videoDescription = document.getElementById('current-video-description');
+            const noVideoMessage = document.getElementById('no-video-message');
+            const loadingOverlay = document.getElementById('main-player-loading-overlay');
+
+            // Show loading overlay
+            loadingOverlay.classList.add('active');
+
+            // Update video source
+            mainPlayer.src = getEmbedUrl(video.url);
+
+            // Set fixed height and calculate width based on orientation
+            const fixedHeight = 400; // Fixed height in pixels
+            let width;
+
+            if (video.orientation === 'landscape') {
+                width = fixedHeight * (16 / 9); // Width for 16:9 aspect ratio
+            } else if (video.orientation === 'portrait') {
+                width = fixedHeight * (9 / 16); // Width for 9:16 aspect ratio
+            }
+
+            // Apply width and height to the player container
+            mainPlayerContainer.style.height = `${fixedHeight}px`;
+            mainPlayerContainer.style.width = `${width}px`;
+
+            // Update orientation class
+            mainPlayerContainer.className = `main-player-container ${video.orientation}`;
+
+            // Update title and description
+            videoTitle.textContent = video.title;
+            videoDescription.textContent = video.description;
+
+            // Show the player and info, hide the placeholder
+            noVideoMessage.classList.add('hidden');
+            mainPlayerContainer.classList.remove('hidden');
+            videoTitle.classList.remove('hidden');
+            videoDescription.classList.remove('hidden');
+
+            // Hide the loading overlay once the video is loaded
+            mainPlayer.onload = () => {
+                loadingOverlay.classList.remove('active');
+            };
+        }
+
+        // Function to set up scroll buttons
+        function setupScrollButtons() {
+            const scrollContainer = document.getElementById('thumbnails-scroll-container');
+            const scrollLeftBtn = document.getElementById('scroll-left');
+            const scrollRightBtn = document.getElementById('scroll-right');
+
+            // Check if scrolling is needed
+            function checkScrollButtons() {
+                const isScrollable = scrollContainer.scrollWidth > scrollContainer.clientWidth;
+
+                if (isScrollable) {
+                    scrollLeftBtn.classList.remove('hidden');
+                    scrollRightBtn.classList.remove('hidden');
+
+                    // Check scroll position
+                    if (scrollContainer.scrollLeft <= 0) {
+                        scrollLeftBtn.style.opacity = '0.5';
+                        scrollLeftBtn.style.cursor = 'default';
+                    } else {
+                        scrollLeftBtn.style.opacity = '1';
+                        scrollLeftBtn.style.cursor = 'pointer';
+                    }
+
+                    if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 5) {
+                        scrollRightBtn.style.opacity = '0.5';
+                        scrollRightBtn.style.cursor = 'default';
+                    } else {
+                        scrollRightBtn.style.opacity = '1';
+                        scrollRightBtn.style.cursor = 'pointer';
+                    }
+                } else {
+                    scrollLeftBtn.classList.add('hidden');
+                    scrollRightBtn.classList.add('hidden');
+                }
+            }
+
+            // Scroll left button click
+            scrollLeftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Scroll right button click
+            scrollRightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: 300,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Update button visibility on scroll
+            scrollContainer.addEventListener('scroll', checkScrollButtons);
+
+            // Update button visibility on resize
+            window.addEventListener('resize', checkScrollButtons);
+
+            // Initial check
+            setTimeout(checkScrollButtons, 100);
+        }
+
+        // Initialize the portfolio when page loads
+        window.addEventListener('load', () => {
+            createThumbnails();
+        });
+    </script>
+</body>
+</html>
