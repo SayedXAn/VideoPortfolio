@@ -312,107 +312,267 @@
         // ADD YOUR VIDEOS HERE
         // ========================================
         const portfolioVideos = [
-            {
-                id: "video1",
-                title: "Bellissimo Motion Game Solution",
-                description: "A Kinect based skiing game for Bellissimo where players control a skier in 3D ski track enviorment with their body movements, collecting ice cream collectibles to score points and compete on a leaderboard.",
-                url: "https://drive.google.com/file/d/1Bgv_yaOCGhLs5Ze1VbfIdlu_TfyH8zW_/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video2",
-                title: "Boo Bear",
-                description: "",
-                url: "https://drive.google.com/file/d/1ZihKI5p_wtyKlQta0e0J_nHspng8eORE/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video3",
-                title: "TiKA AR Mural",
-                description: "This app brings Kemal Ataturk's mural to life with augmented reality, allowing users to explore its details and test their knowledge through an interactive mini-game. The app also includes a leaderboard for friendly competition and social sharing.",
-                url: "https://drive.google.com/file/d/1Fk0BnCil16aSUvLzZFReekm1k2wdHQ9J/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video4",
-                title: "bKash Offer Catcher",
-                description: "AR gamne to Collect and balance your points with the motion of your head",
-                url: "https://drive.google.com/file/d/1jlAZbn1D6HB4LLiPx_IsU21AO4CVmpRG/view?usp=drive_link",
-                orientation: "portrait"
-            },
-            {
-                id: "video5",
-                title: "Nisa Card - Rotoscope",
-                description: "",
-                url: "https://drive.google.com/file/d/14nzIqCOcHwcXHL5DExaVQkG64oRZbDYi/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video6",
-                title: "Motion Tracking Brush System",
-                description: "Pepsodent's interactive teeth cleaning experience uses sensors in a real-world teeth model to teach students proper brushing techniques through a game that responds to their real-world toothbrush movements.",
-                url: "https://drive.google.com/file/d/11HnStMhwJeMdiSL2F3MB-PFcwbC0B_uU/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video7",
-                title: "IMMUNEXT",
-                description: " An opened book was projected & book pages could be turned by using hand gestures. Leap motion, an optic hand tracking module was used to detect hand gestures and perform respective action.",
-                url: "https://drive.google.com/file/d/1mIRPQ5y69R_rMDHaiB3bJ6nHf7h7V6dk/view?usp=drive_link",
-                orientation: "portrait"
-            },
-            {
-                id: "video8",
-                title: "VR Milky Bar Journey",
-                description: "A virtual reality storyline-based game was developed for Nestle for the promotion of Milky Bar chocolates.The user will start the journey in a bedroom where an opened journey book is placed. Selecting the page with the VR controller would take the user on a space journey.",
-                url: "https://drive.google.com/file/d/16uC4r-XZzZS0gZauBBqFVhPjy_JNvPEo/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video9",
-                title: "Robi Next-Gen AR Photo booth",
-                description: "An AR camera at the event allowed users to take photos with customized backgrounds, choose from six options, have their selected photo printed, and download it by scanning a QR code.",
-                url: "https://drive.google.com/file/d/1bfQZRTeYwE8PzOtoSfhHEWXIhIDpNtZg/view?usp=drive_link",
-                orientation: "portrait"
-            },
-            {
-                id: "video10",
-                title: "Bondstein VR Motorbike Experience",
-                description: "Bondstein's VR biking experience uses Oculus Quest to simulate a high-stakes chase against an AI-controlled thief, with realistic bike controls and a map for navigation.",
-                url: "https://drive.google.com/file/d/1BlfmPrXZerVrWhARyeA_LRNqo9kixk2e/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video11",
-                title: "DBL - Photo with Shakib",
-                description: "An AR camera at the event let users take photos with animated images of Shakib Al Hasan, choosing from different poses, and then share the photo on a big screen and download it by scanning a QR code.",
-                url: "https://drive.google.com/file/d/1MsQwtmAFlkc9UWk-6Va8hF8yyhyv0lg8/view?usp=drive_link",
-                orientation: "portrait"
-            },
-            {
-                id: "video12",
-                title: "Maggi VR Beat Saber",
-                description: "Maggi's VR game lets players use lightsaber controllers to cut ingredients that spawn to the rhythm of customized music, earning points and seeing their leaderboard ranking based on sign-up information.",
-                url: "https://drive.google.com/file/d/1DpyyupFnhiCHTixFlK88TifkG2FsTuXe/view?usp=drive_link",
-                orientation: "portrait"
-            },
-            {
-                id: "video13",
-                title: "VR Smart Bangladesh ",
-                description: "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
-                url: "https://drive.google.com/file/d/1bzAzUUK9npNhH3FKSVjnWSrRLBgBHYQ2/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            {
-                id: "video14",
-                title: "Kinect Coloring",
-                description: "The motion of your hands are enough to complete te painting with colours.",
-                url: "https://drive.google.com/file/d/1njIgwY8K2FzIAJgHJhYo17P3sjJguClx/view?usp=drive_link",
-                orientation: "landscape"
-            },
-            
-            // Add more videos here...
-        ];
+    {
+        id: "video1",
+        title: "Bellissimo Motion Game Solution",
+        description: "A Kinect based skiing game for Bellissimo where players control a skier in 3D ski track enviorment with their body movements, collecting ice cream collectibles to score points and compete on a leaderboard.",
+        url: "https://drive.google.com/file/d/1Bgv_yaOCGhLs5Ze1VbfIdlu_TfyH8zW_/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video2",
+        title: "Boo Bear",
+        description: "",
+        url: "https://drive.google.com/file/d/1ZihKI5p_wtyKlQta0e0J_nHspng8eORE/view?usp=drive_link",
+        orientation: "potrait"
+    },
+    {
+        id: "video3",
+        title: "TiKA AR Mural",
+        description: "This app brings Kemal Ataturk's mural to life with augmented reality, allowing users to explore its details and test their knowledge through an interactive mini-game. The app also includes a leaderboard for friendly competition and social sharing.",
+        url: "https://drive.google.com/file/d/1Fk0BnCil16aSUvLzZFReekm1k2wdHQ9J/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video4",
+        title: "bKash Offer Catcher",
+        description: "AR gamne to Collect and balance your points with the motion of your head",
+        url: "https://drive.google.com/file/d/1jlAZbn1D6HB4LLiPx_IsU21AO4CVmpRG/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video5",
+        title: "Nisa Card - Rotoscope",
+        description: "",
+        url: "https://drive.google.com/file/d/14nzIqCOcHwcXHL5DExaVQkG64oRZbDYi/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video6",
+        title: "Motion Tracking Brush System",
+        description: "Pepsodent's interactive teeth cleaning experience uses sensors in a real-world teeth model to teach students proper brushing techniques through a game that responds to their real-world toothbrush movements.",
+        url: "https://drive.google.com/file/d/11HnStMhwJeMdiSL2F3MB-PFcwbC0B_uU/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video7",
+        title: "IMMUNEXT",
+        description: " An opened book was projected & book pages could be turned by using hand gestures. Leap motion, an optic hand tracking module was used to detect hand gestures and perform respective action.",
+        url: "https://drive.google.com/file/d/1mIRPQ5y69R_rMDHaiB3bJ6nHf7h7V6dk/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video8",
+        title: "VR Milky Bar Journey",
+        description: "A virtual reality storyline-based game was developed for Nestle for the promotion of Milky Bar chocolates.The user will start the journey in a bedroom where an opened journey book is placed. Selecting the page with the VR controller would take the user on a space journey.",
+        url: "https://drive.google.com/file/d/16uC4r-XZzZS0gZauBBqFVhPjy_JNvPEo/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video9",
+        title: "Robi Next-Gen AR Photo booth",
+        description: "An AR camera at the event allowed users to take photos with customized backgrounds, choose from six options, have their selected photo printed, and download it by scanning a QR code.",
+        url: "https://drive.google.com/file/d/1bfQZRTeYwE8PzOtoSfhHEWXIhIDpNtZg/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video10",
+        title: "Bondstein VR Motorbike Experience",
+        description: "Bondstein's VR biking experience uses Oculus Quest to simulate a high-stakes chase against an AI-controlled thief, with realistic bike controls and a map for navigation.",
+        url: "https://drive.google.com/file/d/1BlfmPrXZerVrWhARyeA_LRNqo9kixk2e/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video11",
+        title: "DBL - Photo with Shakib",
+        description: "An AR camera at the event let users take photos with animated images of Shakib Al Hasan, choosing from different poses, and then share the photo on a big screen and download it by scanning a QR code.",
+        url: "https://drive.google.com/file/d/1MsQwtmAFlkc9UWk-6Va8hF8yyhyv0lg8/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video12",
+        title: "Maggi VR Beat Saber",
+        description: "Maggi's VR game lets players use lightsaber controllers to cut ingredients that spawn to the rhythm of customized music, earning points and seeing their leaderboard ranking based on sign-up information.",
+        url: "https://drive.google.com/file/d/1DpyyupFnhiCHTixFlK88TifkG2FsTuXe/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video13",
+        title: "VR Smart Bangladesh ",
+        description: "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
+        url: "https://drive.google.com/file/d/1bzAzUUK9npNhH3FKSVjnWSrRLBgBHYQ2/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video14",
+        title: "Kinect Coloring",
+        description: "The motion of your hands are enough to complete te painting with colours.",
+        url: "https://drive.google.com/file/d/1njIgwY8K2FzIAJgHJhYo17P3sjJguClx/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video15",
+        title: "Interactive Wall",
+        description: "",
+        url: "https://drive.google.com/file/d/1dcYLeLXqoiucO_0ASqx2PH-Y9w4WuVSc/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video16",
+        title: "Q/A Spaceship Game",
+        description: "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
+        url: "https://drive.google.com/file/d/1yaaZwZjwbTgDQS3LBlZ7kZ8e10kngUuq/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video17",
+        title: "Marker based interactive AV Zone",
+        description: "",
+        url: "https://drive.google.com/file/d/1Xw-QPeb_YlFXAwGTyNSxt8X9KjIGhRPh/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video18",
+        title: "HMO enterace motion detect AV",
+        description: "",
+        url: "https://drive.google.com/file/d/1OUNhBtQSaPzfBl1h9fBe5R4XtV2FdXjQ/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video19",
+        title: "HMO Holographic 3D intro",
+        description: "",
+        url: "https://drive.google.com/file/d/1LM211EzAgyZE6B8do_or44a-aD-0sFam/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video20",
+        title: "HMO Q/a Buzzer",
+        description: "",
+        url: "https://drive.google.com/file/d/12sGbOcPXd10NRHEUffeNDxhWAL1-65SX/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video21",
+        title: "Flappy Bird",
+        description: "",
+        url: "https://drive.google.com/file/d/1n0tKnov7-F6SJkuyljQgKXkVFwGQ1isR/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video22",
+        title: "Therap Car Race Game",
+        description: "",
+        url: "https://drive.google.com/file/d/1T9usTtwEDPPZKDmCuK-0JRgjcQD5Lo-X/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video23",
+        title: "Trivia",
+        description: "",
+        url: "https://drive.google.com/file/d/1248YIRmqmfbu4c4cMTK07Yt5tcgijV1k/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video24",
+        title: "Therap24 interactive signature wall",
+        description: "",
+        url: "https://drive.google.com/file/d/1lCIxQWB060X7zrbzsFOsZFHIj1OldpxB/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video26",
+        title: "Therap AR 360 Photobooth",
+        description: "",
+        url: "https://drive.google.com/file/d/12AC8edvhnq8537_zI_06iR0nUMZgi7f5/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video25",
+        title: "MEDX bubble shooting game",
+        description: "",
+        url: "https://drive.google.com/file/d/1jAhWAy0VyIKZqu4s8cYlbeXzCcAXvraW/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video26",
+        title: "3D Projection room",
+        description: "",
+        url: "https://drive.google.com/file/d/1_xS8KMok7h-mROx9aAvFT3KZ6HiAK_yf/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video27",
+        title: "Kitkat Hall of Fame",
+        description: "",
+        url: "https://drive.google.com/file/d/1m0EIQFwSVT6uHb8G1h0guKLxDBzFUAbt/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video28",
+        title: "Stomach story",
+        description: "",
+        url: "https://drive.google.com/file/d/15zlsmpFy0-Ay0KS7Zj5Vz0azuEZhuObp/view?usp=drive_link",
+        orientation: "Portrait"
+    },
+    {
+        id: "video29",
+        title: "AR Projection Flipbook",
+        description: "",
+        url: "https://drive.google.com/file/d/1araoeYV7pR63TJK15Hrhgllsnmmyf_v_/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video33",
+        title: "immunity catcher game",
+        description: "",
+        url: "https://drive.google.com/file/d/1JSwDVCnea9Fb_wFiL2xc4snRsklSXrIN/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video31",
+        title: "MILO Cricket",
+        description: "",
+        url: "https://drive.google.com/file/d/176S3_7GZRTZWkd3_QLtGdxaiNGFyBiTy/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video32",
+        title: "Partner VR experience",
+        description: "",
+        url: "https://drive.google.com/file/d/1YGGcdVxFaAtzuVardgUtDlxr6Ekvm8nL/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video34",
+        title: "Lyfe Markerbased catcher game",
+        description: "",
+        url: "https://drive.google.com/file/d/138AbQZMuSkxQgfwPihMKYcsezj_aRoYn/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    {
+        id: "video35",
+        title: "Lifeboy AR photobooth",
+        description: "",
+        url: "https://drive.google.com/file/d/1oce9B7IaGSGX3d7Q65bmms8EdTmt81N8/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video36",
+        title: "POwer 2D Game",
+        description: "",
+        url: "https://drive.google.com/file/d/1WZrQzLDnBaAifOVqmqwVU_V6fhTAfh7a/view?usp=drive_link",
+        orientation: "landscape"
+    },
+    {
+        id: "video37",
+        title: "AR Stall",
+        description: "",
+        url: "https://drive.google.com/file/d/1YSVylxYVCFb2q3BQ7CRKtoDPUU9y-bo8/view?usp=drive_link",
+        orientation: "portrait"
+    },
+    // Add more videos here...
+];
 
         // Function to convert regular Google Drive share URL to embed URL
         function getEmbedUrl(url) {
