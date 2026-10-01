@@ -1,975 +1,1026 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Video Portfolio</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
-            overflow-x: hidden;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        color: #333;
+        overflow-x: hidden;
+      }
 
-        header {
-            text-align: left;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-        }
+      header {
+        text-align: left;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+      }
 
-        h1 {
-            font-size: 2rem;
-            margin: 0;
-            color: #2d2d2d;
-        }
+      h1 {
+        font-size: 2rem;
+        margin: 0;
+        color: #2d2d2d;
+      }
 
-        .subtitle {
-            font-size: 1rem;
-            color: #666;
-            margin: 0;
-        }
+      .subtitle {
+        font-size: 1rem;
+        color: #666;
+        margin: 0;
+      }
 
-        .portfolio-container {
-            display: flex;
-            flex-direction: column;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+      .portfolio-container {
+        display: flex;
+        flex-direction: column;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-        /* Main video player */
-        .main-video-section {
-            width: 100%;
-            margin-bottom: 15px;
-        }
+      /* Main video player */
+      .main-video-section {
+        width: 100%;
+        margin-bottom: 15px;
+      }
 
-        .main-player-container {
-            position: relative;
-            background-color: #000;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 0 auto;
-            height: 400px; /* Fixed height for both landscape and portrait */
-        }
+      .main-player-container {
+        position: relative;
+        background-color: #000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 0 auto;
+        height: 400px; /* Fixed height for both landscape and portrait */
+      }
 
-        .main-player-container.landscape {
-            width: calc(400px * (16 / 9)); /* Width for 16:9 aspect ratio */
-            max-width: 800px; /* Optional: Limit maximum width */
-        }
+      .main-player-container.landscape {
+        width: calc(400px * (16 / 9)); /* Width for 16:9 aspect ratio */
+        max-width: 800px; /* Optional: Limit maximum width */
+      }
 
-        .main-player-container.portrait {
-            width: calc(400px * (9 / 16)); /* Width for 9:16 aspect ratio */
-            max-width: 350px; /* Optional: Limit maximum width */
-        }
+      .main-player-container.portrait {
+        width: calc(400px * (9 / 16)); /* Width for 9:16 aspect ratio */
+        max-width: 350px; /* Optional: Limit maximum width */
+      }
 
-        .main-player-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+      .main-player-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
 
-        /* Loading overlay for main video player */
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(0, 0, 0); /* Semi-transparent black */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 1rem;
-            opacity: 0; /* Initially hidden */
-            transition: opacity 0.3s ease;
-            pointer-events: none; /* Ensure clicks pass through to the player */
-            z-index: 10; /* Ensure it's above the iframe */
-        }
+      /* Loading overlay for main video player */
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0, 0, 0); /* Semi-transparent black */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 1rem;
+        opacity: 0; /* Initially hidden */
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Ensure clicks pass through to the player */
+        z-index: 10; /* Ensure it's above the iframe */
+      }
 
-        .loading-overlay.active {
-            opacity: 1; /* Show overlay when active */
-        }
+      .loading-overlay.active {
+        opacity: 1; /* Show overlay when active */
+      }
 
-        .video-info {
-            margin-top: 10px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+      .video-info {
+        margin-top: 10px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
-        .video-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+      .video-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
 
-        .video-description {
-            color: #666;
-            line-height: 1.5;
-            max-height: 60px;
-            overflow-y: auto;
-        }
+      .video-description {
+        color: #666;
+        line-height: 1.5;
+        max-height: 60px;
+        overflow-y: auto;
+      }
 
-        /* Horizontally scrollable thumbnails section */
-        .thumbnails-section {
-            width: 100%;
-            position: relative;
-        }
+      /* Horizontally scrollable thumbnails section */
+      .thumbnails-section {
+        width: 100%;
+        position: relative;
+      }
 
-        .thumbnails-scroll-container {
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            white-space: nowrap;
-            padding: 10px 0;
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            scrollbar-width: thin; /* Firefox */
-            scrollbar-color: #ccc #f1f1f1; /* Firefox */
-        }
+      .thumbnails-scroll-container {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding: 10px 0;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: #ccc #f1f1f1; /* Firefox */
+      }
 
-        /* Custom scrollbar styling for Chrome, Edge, and Safari */
-        .thumbnails-scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
+      /* Custom scrollbar styling for Chrome, Edge, and Safari */
+      .thumbnails-scroll-container::-webkit-scrollbar {
+        height: 8px;
+      }
 
-        .thumbnails-scroll-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
+      .thumbnails-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
 
-        .thumbnails-scroll-container::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
+      .thumbnails-scroll-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
 
-        .thumbnails-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: #aaa;
-        }
+      .thumbnails-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
 
-        .thumbnails-grid {
-            display: inline-flex;
-            padding: 0 5px;
-        }
+      .thumbnails-grid {
+        display: inline-flex;
+        padding: 0 5px;
+      }
 
-        .thumbnail-item {
-            cursor: pointer;
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-right: 15px;
-            white-space: normal;
-            width: 180px; /* Smaller thumbnails */
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 20px;
-        }
+      .thumbnail-item {
+        cursor: pointer;
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        margin-right: 15px;
+        white-space: normal;
+        width: 180px; /* Smaller thumbnails */
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          #6a11cb,
+          #2575fc
+        ); /* Gradient background */
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 20px;
+      }
 
-        .thumbnail-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
+      .thumbnail-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      }
 
-        .thumbnail-item.active {
-            outline: 3px solid #4285f4;
-        }
+      .thumbnail-item.active {
+        outline: 3px solid #4285f4;
+      }
 
-        /* Scroll buttons */
-        .scroll-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
+      /* Scroll buttons */
+      .scroll-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+      }
 
-        .scroll-left {
-            left: 5px;
-        }
+      .scroll-left {
+        left: 5px;
+      }
 
-        .scroll-right {
-            right: 5px;
-        }
+      .scroll-right {
+        right: 5px;
+      }
 
-        .scroll-button:before {
-            content: '';
-            width: 0;
-            height: 0;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-        }
+      .scroll-button:before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+      }
 
-        .scroll-left:before {
-            border-right: 12px solid #333;
-        }
+      .scroll-left:before {
+        border-right: 12px solid #333;
+      }
 
-        .scroll-right:before {
-            border-left: 12px solid #333;
-        }
+      .scroll-right:before {
+        border-left: 12px solid #333;
+      }
 
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            color: #666;
-            font-size: 0.9rem;
-        }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+        padding: 10px;
+        color: #666;
+        font-size: 0.9rem;
+      }
 
-        /* Initial state - player hidden until a video is selected */
-        .no-video-selected {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #1f1f1f;
-            color: #999;
-            border-radius: 12px;
-            padding: 60px 40px; /* Smaller placeholder */
-            text-align: center;
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+      /* Initial state - player hidden until a video is selected */
+      .no-video-selected {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1f1f1f;
+        color: #999;
+        border-radius: 12px;
+        padding: 60px 40px; /* Smaller placeholder */
+        text-align: center;
+        font-size: 1.1rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-        .hidden {
-            display: none;
-        }
+      .hidden {
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Portfolio</h1>
-        <p class="subtitle">Select a thumbnail to play the video</p>
+      <h1>Portfolio</h1>
+      <p class="subtitle">Select a thumbnail to play the video</p>
     </header>
 
     <div class="portfolio-container">
-        <!-- Main Video Player Section -->
-        <section class="main-video-section">
-            <div id="no-video-message" class="no-video-selected">
-                <div>
-                    <h2>No Video Selected</h2>
-                    <p>Click on a thumbnail below to load and play a video</p>
-                </div>
-            </div>
+      <!-- Main Video Player Section -->
+      <section class="main-video-section">
+        <div id="no-video-message" class="no-video-selected">
+          <div>
+            <h2>No Video Selected</h2>
+            <p>Click on a thumbnail below to load and play a video</p>
+          </div>
+        </div>
 
-            <div id="main-player-container" class="main-player-container landscape hidden">
-                <iframe id="main-player" src="" allowfullscreen></iframe>
-                <!-- Loading Overlay for Main Video Player -->
-                <div id="main-player-loading-overlay" class="loading-overlay">
-                    <span>Loading...</span>
-                </div>
-            </div>
+        <div
+          id="main-player-container"
+          class="main-player-container landscape hidden"
+        >
+          <iframe id="main-player" src="" allowfullscreen></iframe>
+          <!-- Loading Overlay for Main Video Player -->
+          <div id="main-player-loading-overlay" class="loading-overlay">
+            <span>Loading...</span>
+          </div>
+        </div>
 
-            <div class="video-info">
-                <h2 id="current-video-title" class="video-title hidden">Video Title</h2>
-                <p id="current-video-description" class="video-description hidden">Video description goes here.</p>
-            </div>
-        </section>
+        <div class="video-info">
+          <h2 id="current-video-title" class="video-title hidden">
+            Video Title
+          </h2>
+          <p id="current-video-description" class="video-description hidden">
+            Video description goes here.
+          </p>
+        </div>
+      </section>
 
-        <!-- Horizontally Scrollable Thumbnails Section -->
-        <section class="thumbnails-section">
-            <button id="scroll-left" class="scroll-button scroll-left hidden"></button>
-            <div class="thumbnails-scroll-container" id="thumbnails-scroll-container">
-                <div class="thumbnails-grid" id="thumbnails-grid">
-                    <!-- Thumbnails will be added here dynamically -->
-                </div>
-            </div>
-            <button id="scroll-right" class="scroll-button scroll-right hidden"></button>
-        </section>
+      <!-- Horizontally Scrollable Thumbnails Section -->
+      <section class="thumbnails-section">
+        <button
+          id="scroll-left"
+          class="scroll-button scroll-left hidden"
+        ></button>
+        <div
+          class="thumbnails-scroll-container"
+          id="thumbnails-scroll-container"
+        >
+          <div class="thumbnails-grid" id="thumbnails-grid">
+            <!-- Thumbnails will be added here dynamically -->
+          </div>
+        </div>
+        <button
+          id="scroll-right"
+          class="scroll-button scroll-right hidden"
+        ></button>
+      </section>
     </div>
 
     <footer>
-        <p>&copy; 2025. All rights reserved.</p>
+      <p>&copy; 2025. All rights reserved.</p>
     </footer>
 
     <script>
-        // ========================================
-        // ADD YOUR VIDEOS HERE
-        // ========================================
-        const portfolioVideos = [
-            
-    {
-        id: "video22",
-        title: "Therap Car Race Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1Wv_qb6v8FeW33l187aNb-fnTwJgo7NDX/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video21",
-        title: "Flappy Bird",
-        description: "",
-        url: "https://drive.google.com/file/d/1taM7Lu-Eb8ZL_LK06r8MbD3TmMtjGK0k/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video8",
-        title: "VR Milky Bar Journey",
-        description: "A virtual reality storyline-based game was developed for Nestle for the promotion of Milky Bar chocolates.The user will start the journey in a bedroom where an opened journey book is placed. Selecting the page with the VR controller would take the user on a space journey.",
-        url: "https://drive.google.com/file/d/12OKb7VGzBNXKIj80msttuERIR2qQ3hPl/view",
-        orientation: "landscape"
-    },
-    {
-        id: "video165465",
-        title: "Mixed Reality VR Experience - Operation Theatre",
-        description: "",
-        url: "https://drive.google.com/file/d/1wS1JE_kwZGKqvcCz4dsbqmDnEQs26AgB/view?usp=sharing",
-        orientation: "landscape"
-    },
-    {
-        id: "video1",
-        title: "Bellissimo Motion Game Solution",
-        description: "A Kinect based skiing game for Bellissimo where players control a skier in 3D ski track enviorment with their body movements, collecting ice cream collectibles to score points and compete on a leaderboard.",
-        url: "https://drive.google.com/file/d/1Bgv_yaOCGhLs5Ze1VbfIdlu_TfyH8zW_/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video1",
-        title: "Penalty Shoot - Mobile",
-        description: "Kick the ball hard and try to 'GOAL' each shot",
-        url: "https://drive.google.com/file/d/1NUYxlE4L02D7Zdp8LjIQnxri1TvQw_iS/view?usp=drive_link",
-        orientation: "portrait"
-    },    
-    {
-        id: "video2",
-        title: "Boo Bear",
-        description: "",
-        url: "https://drive.google.com/file/d/1ZihKI5p_wtyKlQta0e0J_nHspng8eORE/view?usp=drive_link",
-        orientation: "potrait"
-    },
-    {
-        id: "video3",
-        title: "TiKA AR Mural",
-        description: "This app brings Kemal Ataturk's mural to life with augmented reality, allowing users to explore its details and test their knowledge through an interactive mini-game. The app also includes a leaderboard for friendly competition and social sharing.",
-        url: "https://drive.google.com/file/d/1Fk0BnCil16aSUvLzZFReekm1k2wdHQ9J/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video4",
-        title: "bKash Offer Catcher",
-        description: "AR gamne to Collect and balance your points with the motion of your head",
-        url: "https://drive.google.com/file/d/1jlAZbn1D6HB4LLiPx_IsU21AO4CVmpRG/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video5",
-        title: "Nisa Card - Rotoscope",
-        description: "",
-        url: "https://drive.google.com/file/d/14nzIqCOcHwcXHL5DExaVQkG64oRZbDYi/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video6",
-        title: "Motion Tracking Brush System",
-        description: "Pepsodent's interactive teeth cleaning experience uses sensors in a real-world teeth model to teach students proper brushing techniques through a game that responds to their real-world toothbrush movements.",
-        url: "https://drive.google.com/file/d/11HnStMhwJeMdiSL2F3MB-PFcwbC0B_uU/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video7",
-        title: "Interactive Book Projection",
-        description: " An opened book was projected & book pages could be turned by using hand gestures. Leap motion, an optic hand tracking module was used to detect hand gestures and perform respective action.",
-        url: "https://drive.google.com/file/d/1mIRPQ5y69R_rMDHaiB3bJ6nHf7h7V6dk/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    
-    {
-        id: "video9",
-        title: "Robi Next-Gen AR Photo booth",
-        description: "An AR camera at the event allowed users to take photos with customized backgrounds, choose from six options, have their selected photo printed, and download it by scanning a QR code.",
-        url: "https://drive.google.com/file/d/1bfQZRTeYwE8PzOtoSfhHEWXIhIDpNtZg/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video10",
-        title: "Bondstein VR Motorbike Experience",
-        description: "Bondstein's VR biking experience uses Oculus Quest to simulate a high-stakes chase against an AI-controlled thief, with realistic bike controls and a map for navigation.",
-        url: "https://drive.google.com/file/d/1BlfmPrXZerVrWhARyeA_LRNqo9kixk2e/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video11",
-        title: "DBL - Photo with Shakib",
-        description: "An AR camera at the event let users take photos with animated images of Shakib Al Hasan, choosing from different poses, and then share the photo on a big screen and download it by scanning a QR code.",
-        url: "https://drive.google.com/file/d/1MsQwtmAFlkc9UWk-6Va8hF8yyhyv0lg8/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video12",
-        title: "Maggi VR Beat Saber",
-        description: "Maggi's VR game lets players use lightsaber controllers to cut ingredients that spawn to the rhythm of customized music, earning points and seeing their leaderboard ranking based on sign-up information.",
-        url: "https://drive.google.com/file/d/1DpyyupFnhiCHTixFlK88TifkG2FsTuXe/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video13",
-        title: "VR Smart Bangladesh ",
-        description: "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
-        url: "https://drive.google.com/file/d/1bzAzUUK9npNhH3FKSVjnWSrRLBgBHYQ2/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video14",
-        title: "Kinect Coloring",
-        description: "The motion of your hands are enough to complete te painting with colours.",
-        url: "https://drive.google.com/file/d/1njIgwY8K2FzIAJgHJhYo17P3sjJguClx/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video15",
-        title: "Interactive Wall",
-        description: "",
-        url: "https://drive.google.com/file/d/1dcYLeLXqoiucO_0ASqx2PH-Y9w4WuVSc/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video16",
-        title: "Q/A Spaceship Game",
-        description: "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
-        url: "https://drive.google.com/file/d/1yaaZwZjwbTgDQS3LBlZ7kZ8e10kngUuq/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video17",
-        title: "Marker based interactive AV Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/1Xw-QPeb_YlFXAwGTyNSxt8X9KjIGhRPh/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video18",
-        title: "Motion detection AV Player",
-        description: "",
-        url: "https://drive.google.com/file/d/1OUNhBtQSaPzfBl1h9fBe5R4XtV2FdXjQ/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video19",
-        title: "HMO Holographic 3D intro",
-        description: "",
-        url: "https://drive.google.com/file/d/1LM211EzAgyZE6B8do_or44a-aD-0sFam/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video20",
-        title: "HMO Q/a Buzzer",
-        description: "",
-        url: "https://drive.google.com/file/d/12sGbOcPXd10NRHEUffeNDxhWAL1-65SX/view?usp=drive_link",
-        orientation: "landscape"
-    },    
-    {
-        id: "video23",
-        title: "Trivia",
-        description: "",
-        url: "https://drive.google.com/file/d/1VEiqEuhNbAwezVcRfhK3dL-g3ugHWLHl/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video24",
-        title: "Therap24 interactive signature wall",
-        description: "",
-        url: "https://drive.google.com/file/d/1lCIxQWB060X7zrbzsFOsZFHIj1OldpxB/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video26",
-        title: "Therap AR 360 Photobooth",
-        description: "",
-        url: "https://drive.google.com/file/d/12AC8edvhnq8537_zI_06iR0nUMZgi7f5/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video25",
-        title: "MEDX bubble shooting game",
-        description: "",
-        url: "https://drive.google.com/file/d/1jAhWAy0VyIKZqu4s8cYlbeXzCcAXvraW/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video26",
-        title: "3D Projection room",
-        description: "",
-        url: "https://drive.google.com/file/d/1_xS8KMok7h-mROx9aAvFT3KZ6HiAK_yf/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video27",
-        title: "Kitkat Hall of Fame",
-        description: "",
-        url: "https://drive.google.com/file/d/1m0EIQFwSVT6uHb8G1h0guKLxDBzFUAbt/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video28",
-        title: "Stomach story",
-        description: "",
-        url: "https://drive.google.com/file/d/15zlsmpFy0-Ay0KS7Zj5Vz0azuEZhuObp/view?usp=drive_link",
-        orientation: "Portrait"
-    },
-    {
-        id: "video29",
-        title: "AR Projection Flipbook",
-        description: "",
-        url: "https://drive.google.com/file/d/1araoeYV7pR63TJK15Hrhgllsnmmyf_v_/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video33",
-        title: "immunity catcher game",
-        description: "",
-        url: "https://drive.google.com/file/d/1JSwDVCnea9Fb_wFiL2xc4snRsklSXrIN/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video31",
-        title: "MILO Cricket",
-        description: "",
-        url: "https://drive.google.com/file/d/176S3_7GZRTZWkd3_QLtGdxaiNGFyBiTy/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video32",
-        title: "Partner VR experience",
-        description: "",
-        url: "https://drive.google.com/file/d/1YGGcdVxFaAtzuVardgUtDlxr6Ekvm8nL/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video34",
-        title: "Lyfe Markerbased catcher game",
-        description: "",
-        url: "https://drive.google.com/file/d/138AbQZMuSkxQgfwPihMKYcsezj_aRoYn/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video35",
-        title: "Lifeboy AR photobooth",
-        description: "",
-        url: "https://drive.google.com/file/d/1oce9B7IaGSGX3d7Q65bmms8EdTmt81N8/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video36",
-        title: "POwer 2D Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1WZrQzLDnBaAifOVqmqwVU_V6fhTAfh7a/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "video37",
-        title: "AR Stall",
-        description: "",
-        url: "https://drive.google.com/file/d/1YSVylxYVCFb2q3BQ7CRKtoDPUU9y-bo8/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "video38",
-        title: "Stomach Story - Touch Experience",
-        description: "",
-        url: "https://drive.google.com/file/d/1Pz6cjI27fa1XNlkiTwQhd8BWklIC_NXP/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "Marker Based Interactive AV Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/1ph-bOBQRaNR7V1dQOvjfNEIBzggz55ch/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Bkash Offer Catcher - Head Tracker Interactive Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1F6H9jmrBA9fc9VbcRw9btXURSwjwy5AT/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "Space Shooter Quiz Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1kd7XpoaEUJvwyaYydA1moPTuqNSnF_9Q/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "TikTok AR Photobooth",
-        description: "",
-        url: "https://drive.google.com/file/d/1_gzHpx2WPX-uRQRN9NdOq3IE_7x95-gA/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "July Martyrs - Interactive Book",
-        description: "",
-        url: "https://drive.google.com/file/d/18Xd9CYscfnSOgu8-99exYtli7DgKCpf6/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Live Wall - Interactive Display",
-        description: "",
-        url: "https://drive.google.com/file/d/1E8HLMoZvKZ0LniixrQW7ErDurYR9WOGR/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Interactive Book - Smaller Scale",
-        description: "",
-        url: "https://drive.google.com/file/d/1FrYFdnZI2tses5e-ZUh583udk-xdekLz/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "Product AV - Touch Experience",
-        description: "",
-        url: "https://drive.google.com/file/d/1gP6G4llPdTbZc-K1WWR1tS_eBxt_RR_3/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "IOT Based Interactive Puzzle Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1dcCMCxANB87BuszY3-fUTJB_Tf48vAuc/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Educational Touch Gamme",
-        description: "",
-        url: "https://drive.google.com/file/d/1HKuqg-Tt0iSy5NrcdMx3JA11FDhwvDC7/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Buzzer Wall - Quiz Game",
-        description: "",
-        url: "https://drive.google.com/file/d/16RxBJTfF1m-AMFS9_Z0-20G59zQGtpeP/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "AR Photobooth - Instant Framed Photo",
-        description: "",
-        url: "https://drive.google.com/file/d/1QY0FvCAh8FINaNP_YmbND_GRYYNlSn2G/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "AR Invitaion Card",
-        description: "",
-        url: "https://drive.google.com/file/d/1z7Jxmjxw2S6AF2QmcEd2RVUnv4uw2989/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "IOT Based Interactive Mascot - AV Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/13pxjF97mxSX6u-b2oIciU8RxumBz_2lf/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Sensor based Immersive AV Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/1rFn-92nmdcE534CHD0o0V7yllqyWHkjS/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Signature Wall - Personalized Experience",
-        description: "",
-        url: "https://drive.google.com/file/d/1_KvhX0KuGV6LAbLD5taeGM0O4idW2sfT/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Microscopic AV Zone - Interactive Experience",
-        description: "",
-        url: "https://drive.google.com/file/d/1_vGmsInTwZTJCen4MddvF4jrYdI72rQf/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "World Map - Journals AV Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/16LFG7dFl63cjI6G3D3-938ES5wNxqBDr/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Sensor based Interactive Presentation",
-        description: "",
-        url: "https://drive.google.com/file/d/1GQxT1nN0mXQZyrXTsnT91WHYIREipS4e/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "Sensor based Interactive Presentation",
-        description: "",
-        url: "https://drive.google.com/file/d/1i8orx8sLs2Dio-5hw5Du9MVZDBhvZsqD/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "Educational Interactive Puzzle Game",
-        description: "",
-        url: "https://drive.google.com/file/d/1w4VBuuDnpu04qdhGzcQ0YWA5-6O8Y-IK/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "VR Survival Shooter Game",
-        description: "This is a custom-built virtual reality shooting experience developed in Unity 6 as an immersive brand activation for Nestlé Bangladesh, in collaboration with Singularity Limited. Designed to captivate users through interactive gameplay and visually engaging environments, the experience combines entertainment with brand storytelling, creating memorable short-form VR sessions for public engagement and promotional events.",
-        url: "https://drive.google.com/file/d/1TfHLqjmbC24fv9f6ZzKuNS0_2kMiXD8z/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "Surfing Simulator",
-        description: "",
-        url: "https://drive.google.com/file/d/1tiXWUKC3_n3YPHNHZ_GZzi96Nn57FuKh/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "AI Smile Photobooth",
-        description: "",
-        url: "https://drive.google.com/file/d/1mGdIzPTzP3Zzbx6jSlo6kSZs4l8xNtSD/view?usp=drive_link",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "AI Smile Photobooth",
-        description: "",
-        url: "https://drive.google.com/file/d/11v5j6KMcbdz_-LJwthkgM56zVwsA8-D9/view?usp=sharing",
-        orientation: "portrait"
-    },
-    {
-        id: "",
-        title: "VR Survival Shooter Game Zone",
-        description: "",
-        url: "https://drive.google.com/file/d/1KjAiXJPUPCtUKBlBhZS2fCXC4oDj2Cj2/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    {
-        id: "",
-        title: "2D Platformer Multiplayer Game",
-        description: "",
-        url: "https://drive.google.com/file/d/13iJ_tTGZ6uKmFcf5niRjJwM-PReV8IYA/view?usp=drive_link",
-        orientation: "landscape"
-    },
-    // Add more videos here...
-];
+      const portfolioVideos = [
+        {
+          id: "video22",
+          title: "Therap Car Race Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1Wv_qb6v8FeW33l187aNb-fnTwJgo7NDX/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video21",
+          title: "Flappy Bird",
+          description: "",
+          url: "https://drive.google.com/file/d/1taM7Lu-Eb8ZL_LK06r8MbD3TmMtjGK0k/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video8",
+          title: "VR Milky Bar Journey",
+          description:
+            "A virtual reality storyline-based game was developed for Nestle for the promotion of Milky Bar chocolates.The user will start the journey in a bedroom where an opened journey book is placed. Selecting the page with the VR controller would take the user on a space journey.",
+          url: "https://drive.google.com/file/d/12OKb7VGzBNXKIj80msttuERIR2qQ3hPl/view",
+          orientation: "landscape",
+        },
+        {
+          id: "video165465",
+          title: "Mixed Reality VR Experience - Operation Theatre",
+          description: "",
+          url: "https://drive.google.com/file/d/1wS1JE_kwZGKqvcCz4dsbqmDnEQs26AgB/view?usp=sharing",
+          orientation: "landscape",
+        },
+        {
+          id: "video1",
+          title: "Bellissimo Motion Game Solution",
+          description:
+            "A Kinect based skiing game for Bellissimo where players control a skier in 3D ski track enviorment with their body movements, collecting ice cream collectibles to score points and compete on a leaderboard.",
+          url: "https://drive.google.com/file/d/1Bgv_yaOCGhLs5Ze1VbfIdlu_TfyH8zW_/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video1",
+          title: "Penalty Shoot - Mobile",
+          description: "Kick the ball hard and try to 'GOAL' each shot",
+          url: "https://drive.google.com/file/d/1NUYxlE4L02D7Zdp8LjIQnxri1TvQw_iS/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video2",
+          title: "Boo Bear",
+          description: "",
+          url: "https://drive.google.com/file/d/1ZihKI5p_wtyKlQta0e0J_nHspng8eORE/view?usp=drive_link",
+          orientation: "potrait",
+        },
+        {
+          id: "video3",
+          title: "TiKA AR Mural",
+          description:
+            "This app brings Kemal Ataturk's mural to life with augmented reality, allowing users to explore its details and test their knowledge through an interactive mini-game. The app also includes a leaderboard for friendly competition and social sharing.",
+          url: "https://drive.google.com/file/d/1Fk0BnCil16aSUvLzZFReekm1k2wdHQ9J/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video4",
+          title: "bKash Offer Catcher",
+          description:
+            "AR gamne to Collect and balance your points with the motion of your head",
+          url: "https://drive.google.com/file/d/1jlAZbn1D6HB4LLiPx_IsU21AO4CVmpRG/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video5",
+          title: "Nisa Card - Rotoscope",
+          description: "",
+          url: "https://drive.google.com/file/d/14nzIqCOcHwcXHL5DExaVQkG64oRZbDYi/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video6",
+          title: "Motion Tracking Brush System",
+          description:
+            "Pepsodent's interactive teeth cleaning experience uses sensors in a real-world teeth model to teach students proper brushing techniques through a game that responds to their real-world toothbrush movements.",
+          url: "https://drive.google.com/file/d/11HnStMhwJeMdiSL2F3MB-PFcwbC0B_uU/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video7",
+          title: "Interactive Book Projection",
+          description:
+            " An opened book was projected & book pages could be turned by using hand gestures. Leap motion, an optic hand tracking module was used to detect hand gestures and perform respective action.",
+          url: "https://drive.google.com/file/d/1mIRPQ5y69R_rMDHaiB3bJ6nHf7h7V6dk/view?usp=drive_link",
+          orientation: "portrait",
+        },
 
-        // Function to convert regular Google Drive share URL to embed URL
-        function getEmbedUrl(url) {
-            let fileId;
+        {
+          id: "video9",
+          title: "Robi Next-Gen AR Photo booth",
+          description:
+            "An AR camera at the event allowed users to take photos with customized backgrounds, choose from six options, have their selected photo printed, and download it by scanning a QR code.",
+          url: "https://drive.google.com/file/d/1bfQZRTeYwE8PzOtoSfhHEWXIhIDpNtZg/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video10",
+          title: "Bondstein VR Motorbike Experience",
+          description:
+            "Bondstein's VR biking experience uses Oculus Quest to simulate a high-stakes chase against an AI-controlled thief, with realistic bike controls and a map for navigation.",
+          url: "https://drive.google.com/file/d/1BlfmPrXZerVrWhARyeA_LRNqo9kixk2e/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video11",
+          title: "DBL - Photo with Shakib",
+          description:
+            "An AR camera at the event let users take photos with animated images of Shakib Al Hasan, choosing from different poses, and then share the photo on a big screen and download it by scanning a QR code.",
+          url: "https://drive.google.com/file/d/1MsQwtmAFlkc9UWk-6Va8hF8yyhyv0lg8/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video12",
+          title: "Maggi VR Beat Saber",
+          description:
+            "Maggi's VR game lets players use lightsaber controllers to cut ingredients that spawn to the rhythm of customized music, earning points and seeing their leaderboard ranking based on sign-up information.",
+          url: "https://drive.google.com/file/d/1DpyyupFnhiCHTixFlK88TifkG2FsTuXe/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video13",
+          title: "VR Smart Bangladesh ",
+          description:
+            "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
+          url: "https://drive.google.com/file/d/1bzAzUUK9npNhH3FKSVjnWSrRLBgBHYQ2/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video14",
+          title: "Kinect Coloring",
+          description:
+            "The motion of your hands are enough to complete te painting with colours.",
+          url: "https://drive.google.com/file/d/1njIgwY8K2FzIAJgHJhYo17P3sjJguClx/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video15",
+          title: "Interactive Wall",
+          description: "",
+          url: "https://drive.google.com/file/d/1dcYLeLXqoiucO_0ASqx2PH-Y9w4WuVSc/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video16",
+          title: "Q/A Spaceship Game",
+          description:
+            "Demostrating the Future of smart Bangladesh by AR in to the VR to unlock the Future",
+          url: "https://drive.google.com/file/d/1yaaZwZjwbTgDQS3LBlZ7kZ8e10kngUuq/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video17",
+          title: "Marker based interactive AV Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/1Xw-QPeb_YlFXAwGTyNSxt8X9KjIGhRPh/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video18",
+          title: "Motion detection AV Player",
+          description: "",
+          url: "https://drive.google.com/file/d/1OUNhBtQSaPzfBl1h9fBe5R4XtV2FdXjQ/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video19",
+          title: "HMO Holographic 3D intro",
+          description: "",
+          url: "https://drive.google.com/file/d/1LM211EzAgyZE6B8do_or44a-aD-0sFam/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video20",
+          title: "HMO Q/a Buzzer",
+          description: "",
+          url: "https://drive.google.com/file/d/12sGbOcPXd10NRHEUffeNDxhWAL1-65SX/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video23",
+          title: "Trivia",
+          description: "",
+          url: "https://drive.google.com/file/d/1VEiqEuhNbAwezVcRfhK3dL-g3ugHWLHl/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video24",
+          title: "Therap24 interactive signature wall",
+          description: "",
+          url: "https://drive.google.com/file/d/1lCIxQWB060X7zrbzsFOsZFHIj1OldpxB/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video26",
+          title: "Therap AR 360 Photobooth",
+          description: "",
+          url: "https://drive.google.com/file/d/12AC8edvhnq8537_zI_06iR0nUMZgi7f5/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video25",
+          title: "MEDX bubble shooting game",
+          description: "",
+          url: "https://drive.google.com/file/d/1jAhWAy0VyIKZqu4s8cYlbeXzCcAXvraW/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video26",
+          title: "3D Projection room",
+          description: "",
+          url: "https://drive.google.com/file/d/1_xS8KMok7h-mROx9aAvFT3KZ6HiAK_yf/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video27",
+          title: "Kitkat Hall of Fame",
+          description: "",
+          url: "https://drive.google.com/file/d/1m0EIQFwSVT6uHb8G1h0guKLxDBzFUAbt/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video28",
+          title: "Stomach story",
+          description: "",
+          url: "https://drive.google.com/file/d/15zlsmpFy0-Ay0KS7Zj5Vz0azuEZhuObp/view?usp=drive_link",
+          orientation: "Portrait",
+        },
+        {
+          id: "video29",
+          title: "AR Projection Flipbook",
+          description: "",
+          url: "https://drive.google.com/file/d/1araoeYV7pR63TJK15Hrhgllsnmmyf_v_/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video33",
+          title: "immunity catcher game",
+          description: "",
+          url: "https://drive.google.com/file/d/1JSwDVCnea9Fb_wFiL2xc4snRsklSXrIN/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video31",
+          title: "MILO Cricket",
+          description: "",
+          url: "https://drive.google.com/file/d/176S3_7GZRTZWkd3_QLtGdxaiNGFyBiTy/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video32",
+          title: "Partner VR experience",
+          description: "",
+          url: "https://drive.google.com/file/d/1YGGcdVxFaAtzuVardgUtDlxr6Ekvm8nL/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video34",
+          title: "Lyfe Markerbased catcher game",
+          description: "",
+          url: "https://drive.google.com/file/d/138AbQZMuSkxQgfwPihMKYcsezj_aRoYn/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video35",
+          title: "Lifeboy AR photobooth",
+          description: "",
+          url: "https://drive.google.com/file/d/1oce9B7IaGSGX3d7Q65bmms8EdTmt81N8/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video36",
+          title: "POwer 2D Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1WZrQzLDnBaAifOVqmqwVU_V6fhTAfh7a/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "video37",
+          title: "AR Stall",
+          description: "",
+          url: "https://drive.google.com/file/d/1YSVylxYVCFb2q3BQ7CRKtoDPUU9y-bo8/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "video38",
+          title: "Stomach Story - Touch Experience",
+          description: "",
+          url: "https://drive.google.com/file/d/1Pz6cjI27fa1XNlkiTwQhd8BWklIC_NXP/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "Marker Based Interactive AV Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/1ph-bOBQRaNR7V1dQOvjfNEIBzggz55ch/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Bkash Offer Catcher - Head Tracker Interactive Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1F6H9jmrBA9fc9VbcRw9btXURSwjwy5AT/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "Space Shooter Quiz Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1kd7XpoaEUJvwyaYydA1moPTuqNSnF_9Q/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "TikTok AR Photobooth",
+          description: "",
+          url: "https://drive.google.com/file/d/1_gzHpx2WPX-uRQRN9NdOq3IE_7x95-gA/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "July Martyrs - Interactive Book",
+          description: "",
+          url: "https://drive.google.com/file/d/18Xd9CYscfnSOgu8-99exYtli7DgKCpf6/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Live Wall - Interactive Display",
+          description: "",
+          url: "https://drive.google.com/file/d/1E8HLMoZvKZ0LniixrQW7ErDurYR9WOGR/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Interactive Book - Smaller Scale",
+          description: "",
+          url: "https://drive.google.com/file/d/1FrYFdnZI2tses5e-ZUh583udk-xdekLz/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "Product AV - Touch Experience",
+          description: "",
+          url: "https://drive.google.com/file/d/1gP6G4llPdTbZc-K1WWR1tS_eBxt_RR_3/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "IOT Based Interactive Puzzle Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1dcCMCxANB87BuszY3-fUTJB_Tf48vAuc/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Educational Touch Gamme",
+          description: "",
+          url: "https://drive.google.com/file/d/1HKuqg-Tt0iSy5NrcdMx3JA11FDhwvDC7/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Buzzer Wall - Quiz Game",
+          description: "",
+          url: "https://drive.google.com/file/d/16RxBJTfF1m-AMFS9_Z0-20G59zQGtpeP/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "AR Photobooth - Instant Framed Photo",
+          description: "",
+          url: "https://drive.google.com/file/d/1QY0FvCAh8FINaNP_YmbND_GRYYNlSn2G/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "AR Invitaion Card",
+          description: "",
+          url: "https://drive.google.com/file/d/1z7Jxmjxw2S6AF2QmcEd2RVUnv4uw2989/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "IOT Based Interactive Mascot - AV Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/13pxjF97mxSX6u-b2oIciU8RxumBz_2lf/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Sensor based Immersive AV Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/1rFn-92nmdcE534CHD0o0V7yllqyWHkjS/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Signature Wall - Personalized Experience",
+          description: "",
+          url: "https://drive.google.com/file/d/1_KvhX0KuGV6LAbLD5taeGM0O4idW2sfT/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Microscopic AV Zone - Interactive Experience",
+          description: "",
+          url: "https://drive.google.com/file/d/1_vGmsInTwZTJCen4MddvF4jrYdI72rQf/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "World Map - Journals AV Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/16LFG7dFl63cjI6G3D3-938ES5wNxqBDr/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Sensor based Interactive Presentation",
+          description: "",
+          url: "https://drive.google.com/file/d/1GQxT1nN0mXQZyrXTsnT91WHYIREipS4e/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "Sensor based Interactive Presentation",
+          description: "",
+          url: "https://drive.google.com/file/d/1i8orx8sLs2Dio-5hw5Du9MVZDBhvZsqD/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "Educational Interactive Puzzle Game",
+          description: "",
+          url: "https://drive.google.com/file/d/1w4VBuuDnpu04qdhGzcQ0YWA5-6O8Y-IK/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "VR Survival Shooter Game",
+          description:
+            "This is a custom-built virtual reality shooting experience developed in Unity 6 as an immersive brand activation for Nestlé Bangladesh, in collaboration with Singularity Limited. Designed to captivate users through interactive gameplay and visually engaging environments, the experience combines entertainment with brand storytelling, creating memorable short-form VR sessions for public engagement and promotional events.",
+          url: "https://drive.google.com/file/d/1TfHLqjmbC24fv9f6ZzKuNS0_2kMiXD8z/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "Surfing Simulator",
+          description: "",
+          url: "https://drive.google.com/file/d/1tiXWUKC3_n3YPHNHZ_GZzi96Nn57FuKh/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "AI Smile Photobooth",
+          description: "",
+          url: "https://drive.google.com/file/d/1mGdIzPTzP3Zzbx6jSlo6kSZs4l8xNtSD/view?usp=drive_link",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "AI Smile Photobooth",
+          description: "",
+          url: "https://drive.google.com/file/d/11v5j6KMcbdz_-LJwthkgM56zVwsA8-D9/view?usp=sharing",
+          orientation: "portrait",
+        },
+        {
+          id: "",
+          title: "VR Survival Shooter Game Zone",
+          description: "",
+          url: "https://drive.google.com/file/d/1KjAiXJPUPCtUKBlBhZS2fCXC4oDj2Cj2/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        {
+          id: "",
+          title: "2D Platformer Multiplayer Game",
+          description: "",
+          url: "https://drive.google.com/file/d/13iJ_tTGZ6uKmFcf5niRjJwM-PReV8IYA/view?usp=drive_link",
+          orientation: "landscape",
+        },
+        // Add more videos here...
+      ];
 
-            if (url.includes('/file/d/')) {
-                const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/);
-                if (fileIdMatch && fileIdMatch[1]) {
-                    fileId = fileIdMatch[1];
-                }
-            } else if (url.includes('?id=')) {
-                const fileIdMatch = url.match(/\?id=([^&]+)/);
-                if (fileIdMatch && fileIdMatch[1]) {
-                    fileId = fileIdMatch[1];
-                }
-            }
+      // Function to convert regular Google Drive share URL to embed URL
+      function getEmbedUrl(url) {
+        let fileId;
 
-            if (!fileId) {
-                console.error("Invalid Google Drive URL format:", url);
-                return url; // Return the original URL if can't parse
-            }
-
-            return `https://drive.google.com/file/d/${fileId}/preview`;
+        if (url.includes("/file/d/")) {
+          const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/);
+          if (fileIdMatch && fileIdMatch[1]) {
+            fileId = fileIdMatch[1];
+          }
+        } else if (url.includes("?id=")) {
+          const fileIdMatch = url.match(/\?id=([^&]+)/);
+          if (fileIdMatch && fileIdMatch[1]) {
+            fileId = fileIdMatch[1];
+          }
         }
 
-        // Function to create thumbnails
-        function createThumbnails() {
-            const thumbnailsGrid = document.getElementById('thumbnails-grid');
+        if (!fileId) {
+          console.error("Invalid Google Drive URL format:", url);
+          return url; // Return the original URL if can't parse
+        }
 
-            portfolioVideos.forEach((video, index) => {
-                const thumbnailItem = document.createElement('div');
-                thumbnailItem.className = 'thumbnail-item';
-                thumbnailItem.dataset.videoId = video.id;
-                thumbnailItem.textContent = video.title; // Add video title as text
+        return `https://drive.google.com/file/d/${fileId}/preview`;
+      }
 
-                // Add click event to play the video
-                thumbnailItem.addEventListener('click', () => {
-                    playVideo(video);
+      // Fisher-Yates shuffle algorithm
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
 
-                    // Mark this thumbnail as active
-                    document.querySelectorAll('.thumbnail-item').forEach(item => {
-                        item.classList.remove('active');
-                    });
-                    thumbnailItem.classList.add('active');
+      // Function to create thumbnails
+      function createThumbnails() {
+        shuffleArray(portfolioVideos);
+        const thumbnailsGrid = document.getElementById("thumbnails-grid");
 
-                    // Scroll the selected thumbnail into view
-                    thumbnailItem.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                        inline: 'center'
-                    });
-                });
+        portfolioVideos.forEach((video, index) => {
+          const thumbnailItem = document.createElement("div");
+          thumbnailItem.className = "thumbnail-item";
+          thumbnailItem.dataset.videoId = video.id;
+          thumbnailItem.textContent = video.title; // Add video title as text
 
-                thumbnailsGrid.appendChild(thumbnailItem);
+          // Add click event to play the video
+          thumbnailItem.addEventListener("click", () => {
+            playVideo(video);
 
-                // Auto-play the first video when page loads
-                if (index === 0) {
-                    setTimeout(() => {
-                        thumbnailItem.click();
-                    }, 500);
-                }
+            // Mark this thumbnail as active
+            document.querySelectorAll(".thumbnail-item").forEach((item) => {
+              item.classList.remove("active");
             });
+            thumbnailItem.classList.add("active");
 
-            // Setup scroll buttons if we have enough videos to scroll
-            setupScrollButtons();
-        }
-        //asdjaksndkjnasd
-
-        // Function to play a video in the main player
-        function playVideo(video) {
-            const mainPlayerContainer = document.getElementById('main-player-container');
-            const mainPlayer = document.getElementById('main-player');
-            const videoTitle = document.getElementById('current-video-title');
-            const videoDescription = document.getElementById('current-video-description');
-            const noVideoMessage = document.getElementById('no-video-message');
-            const loadingOverlay = document.getElementById('main-player-loading-overlay');
-
-            // Show loading overlay
-            loadingOverlay.classList.add('active');
-
-            // Update video source
-            mainPlayer.src = getEmbedUrl(video.url);
-
-            // Set fixed height and calculate width based on orientation
-            const fixedHeight = 400; // Fixed height in pixels
-            let width;
-
-            if (video.orientation === 'landscape') {
-                width = fixedHeight * (16 / 9); // Width for 16:9 aspect ratio
-            } else if (video.orientation === 'portrait') {
-                width = fixedHeight * (9 / 16); // Width for 9:16 aspect ratio
-            }
-
-            // Apply width and height to the player container
-            mainPlayerContainer.style.height = `${fixedHeight}px`;
-            mainPlayerContainer.style.width = `${width}px`;
-
-            // Update orientation class
-            mainPlayerContainer.className = `main-player-container ${video.orientation}`;
-
-            // Update title and description
-            videoTitle.textContent = video.title;
-            videoDescription.textContent = video.description;
-
-            // Show the player and info, hide the placeholder
-            noVideoMessage.classList.add('hidden');
-            mainPlayerContainer.classList.remove('hidden');
-            videoTitle.classList.remove('hidden');
-            videoDescription.classList.remove('hidden');
-
-            // Hide the loading overlay once the video is loaded
-            mainPlayer.onload = () => {
-                loadingOverlay.classList.remove('active');
-            };
-        }
-
-        // Function to set up scroll buttons
-        function setupScrollButtons() {
-            const scrollContainer = document.getElementById('thumbnails-scroll-container');
-            const scrollLeftBtn = document.getElementById('scroll-left');
-            const scrollRightBtn = document.getElementById('scroll-right');
-
-            // Check if scrolling is needed
-            function checkScrollButtons() {
-                const isScrollable = scrollContainer.scrollWidth > scrollContainer.clientWidth;
-
-                if (isScrollable) {
-                    scrollLeftBtn.classList.remove('hidden');
-                    scrollRightBtn.classList.remove('hidden');
-
-                    // Check scroll position
-                    if (scrollContainer.scrollLeft <= 0) {
-                        scrollLeftBtn.style.opacity = '0.5';
-                        scrollLeftBtn.style.cursor = 'default';
-                    } else {
-                        scrollLeftBtn.style.opacity = '1';
-                        scrollLeftBtn.style.cursor = 'pointer';
-                    }
-
-                    if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 5) {
-                        scrollRightBtn.style.opacity = '0.5';
-                        scrollRightBtn.style.cursor = 'default';
-                    } else {
-                        scrollRightBtn.style.opacity = '1';
-                        scrollRightBtn.style.cursor = 'pointer';
-                    }
-                } else {
-                    scrollLeftBtn.classList.add('hidden');
-                    scrollRightBtn.classList.add('hidden');
-                }
-            }
-
-            // Scroll left button click
-            scrollLeftBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: -300,
-                    behavior: 'smooth'
-                });
+            // Scroll the selected thumbnail into view
+            thumbnailItem.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+              inline: "center",
             });
+          });
 
-            // Scroll right button click
-            scrollRightBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: 300,
-                    behavior: 'smooth'
-                });
-            });
+          thumbnailsGrid.appendChild(thumbnailItem);
 
-            // Update button visibility on scroll
-            scrollContainer.addEventListener('scroll', checkScrollButtons);
-
-            // Update button visibility on resize
-            window.addEventListener('resize', checkScrollButtons);
-
-            // Initial check
-            setTimeout(checkScrollButtons, 100);
-        }
-
-        // Initialize the portfolio when page loads
-        window.addEventListener('load', () => {
-            createThumbnails();
+          // Auto-play the first video when page loads
+          if (index === 0) {
+            setTimeout(() => {
+              thumbnailItem.click();
+            }, 500);
+          }
         });
+
+        // Setup scroll buttons if we have enough videos to scroll
+        setupScrollButtons();
+      }
+      //asdjaksndkjnasd
+
+      // Function to play a video in the main player
+      function playVideo(video) {
+        const mainPlayerContainer = document.getElementById(
+          "main-player-container",
+        );
+        const mainPlayer = document.getElementById("main-player");
+        const videoTitle = document.getElementById("current-video-title");
+        const videoDescription = document.getElementById(
+          "current-video-description",
+        );
+        const noVideoMessage = document.getElementById("no-video-message");
+        const loadingOverlay = document.getElementById(
+          "main-player-loading-overlay",
+        );
+
+        // Show loading overlay
+        loadingOverlay.classList.add("active");
+
+        // Update video source
+        mainPlayer.src = getEmbedUrl(video.url);
+
+        // Set fixed height and calculate width based on orientation
+        const fixedHeight = 400; // Fixed height in pixels
+        let width;
+
+        if (video.orientation === "landscape") {
+          width = fixedHeight * (16 / 9); // Width for 16:9 aspect ratio
+        } else if (video.orientation === "portrait") {
+          width = fixedHeight * (9 / 16); // Width for 9:16 aspect ratio
+        }
+
+        // Apply width and height to the player container
+        mainPlayerContainer.style.height = `${fixedHeight}px`;
+        mainPlayerContainer.style.width = `${width}px`;
+
+        // Update orientation class
+        mainPlayerContainer.className = `main-player-container ${video.orientation}`;
+
+        // Update title and description
+        videoTitle.textContent = video.title;
+        videoDescription.textContent = video.description;
+
+        // Show the player and info, hide the placeholder
+        noVideoMessage.classList.add("hidden");
+        mainPlayerContainer.classList.remove("hidden");
+        videoTitle.classList.remove("hidden");
+        videoDescription.classList.remove("hidden");
+
+        // Hide the loading overlay once the video is loaded
+        mainPlayer.onload = () => {
+          loadingOverlay.classList.remove("active");
+        };
+      }
+
+      // Function to set up scroll buttons
+      function setupScrollButtons() {
+        const scrollContainer = document.getElementById(
+          "thumbnails-scroll-container",
+        );
+        const scrollLeftBtn = document.getElementById("scroll-left");
+        const scrollRightBtn = document.getElementById("scroll-right");
+
+        // Check if scrolling is needed
+        function checkScrollButtons() {
+          const isScrollable =
+            scrollContainer.scrollWidth > scrollContainer.clientWidth;
+
+          if (isScrollable) {
+            scrollLeftBtn.classList.remove("hidden");
+            scrollRightBtn.classList.remove("hidden");
+
+            // Check scroll position
+            if (scrollContainer.scrollLeft <= 0) {
+              scrollLeftBtn.style.opacity = "0.5";
+              scrollLeftBtn.style.cursor = "default";
+            } else {
+              scrollLeftBtn.style.opacity = "1";
+              scrollLeftBtn.style.cursor = "pointer";
+            }
+
+            if (
+              scrollContainer.scrollLeft + scrollContainer.clientWidth >=
+              scrollContainer.scrollWidth - 5
+            ) {
+              scrollRightBtn.style.opacity = "0.5";
+              scrollRightBtn.style.cursor = "default";
+            } else {
+              scrollRightBtn.style.opacity = "1";
+              scrollRightBtn.style.cursor = "pointer";
+            }
+          } else {
+            scrollLeftBtn.classList.add("hidden");
+            scrollRightBtn.classList.add("hidden");
+          }
+        }
+
+        // Scroll left button click
+        scrollLeftBtn.addEventListener("click", () => {
+          scrollContainer.scrollBy({
+            left: -300,
+            behavior: "smooth",
+          });
+        });
+
+        // Scroll right button click
+        scrollRightBtn.addEventListener("click", () => {
+          scrollContainer.scrollBy({
+            left: 300,
+            behavior: "smooth",
+          });
+        });
+
+        // Update button visibility on scroll
+        scrollContainer.addEventListener("scroll", checkScrollButtons);
+
+        // Update button visibility on resize
+        window.addEventListener("resize", checkScrollButtons);
+
+        // Initial check
+        setTimeout(checkScrollButtons, 100);
+      }
+
+      // Initialize the portfolio when page loads
+      window.addEventListener("load", () => {
+        createThumbnails();
+      });
     </script>
-</body>
+  </body>
 </html>
-
-
-
